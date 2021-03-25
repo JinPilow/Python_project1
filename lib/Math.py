@@ -1,11 +1,16 @@
-def sum(a,b):
-    return a+b
+def calculat(s, a, b):
+    if s == '*':
+        return a * b
+    elif s == '+':
+        return a + b
+    elif s == '-':
+        return a - b
+    else:
+        return a / b
 
-def sub(a,b):
-    return a-b
 
-def mul(a,b):
-    return a*b
-
-def div(a,b):
-    return a/b
+def issign(a):
+    if a == '+' or a == '-' or a == '*' or a == '/':
+        return 1
+    else:
+        return 0
