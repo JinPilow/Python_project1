@@ -1,11 +1,4 @@
-a = int(input("숫자를 입력하시오"))
-
-b = int(input("숫자를 입력하시오"))
-
 from lib.Math import *
 
-result= sum(a,b)
-result1= div(a,b)
-print(result)
-print(result1)
-
+s = input("계산기 입력")
+print("결과 : {}".format(eval(s)))
