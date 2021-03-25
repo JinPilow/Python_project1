@@ -29,7 +29,7 @@ while count < len(sign):
         del number[count+1]
         del sign[count]
     else:
-        count+=1    #연산을 안햇을지 다음 인덱스, 안햇을지 인덱스 유지(계산된건 삭제되기 때문)
+        count+=1    #연산을 안햇을시 다음 인덱스, 안햇을시 인덱스 유지(계산된건 삭제되기 때문)
 
 count = 0
 while count < len(sign):
