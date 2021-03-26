@@ -16,7 +16,111 @@ while True:
 print(formula)
 
 from lib.Math import *
+'''
+i = 0
+for i in range(len(formula)-1):
+    if '*' in formula or '/' in formula:
+        j = 0
+        while j < len(formula)-1:
+            if formula[j] == '*':
+                formula[j] = mul(float(formula[j-1]), float(formula[j+1]))
+                print(formula)
+                formula.remove(formula[j+1])
+                formula.remove(formula[j-1])
+                print(formula)
+            elif formula[j] == '/':
+                formula[j] = div(float(formula[j-1]), float(formula[j+1]))
+                formula.remove(formula[j+1])
+                formula.remove(formula[j-1])
+                print(formula)
+            else:
+                j += 1
 
+    else:
+        j = 0
+        while j < len(formula)-1:
+            if formula[j] == '+':
+                formula[j] = add(float(formula[j-1]), float(formula[j+1]))
+                formula.remove(formula[j+1])
+                formula.remove(formula[j-1])
+                print(formula)
+            elif formula[j] == '-':
+                formula[j] = sub(float(formula[j-1]), float(formula[j+1]))
+                formula.remove(formula[j+1])
+                formula.remove(formula[j-1])
+                print(formula)
+            else:
+                j += 1
+print(formula)
+'''
+
+for i in range(len(formula)):
+    if '*' in formula or '/' in formula:
+        while len(formula) > 1:
+            if formula[i] == '*':
+                formula[i] = mul(float(formula[i - 1]), float(formula[i + 1]))
+                print(formula)
+                formula.remove(formula[i + 1])
+                print(formula)
+                formula.remove(formula[i - 1])
+                print(formula)
+            elif formula[i] == '/':
+                formula[i] = div(float(formula[i - 1]), float(formula[i + 1]))
+                print(formula)
+                formula.remove(formula[i + 1])
+                print(formula)
+                formula.remove(formula[i - 1])
+                print(formula)
+            else:
+                i += 1
+    else:
+        while len(formula) > 1:
+            if formula[i] == '+':
+                formula[i] = add(float(formula[i - 1]), float(formula[i + 1]))
+                print(formula)
+                formula.remove(formula[i + 1])
+                print(formula)
+                formula.remove(formula[i - 1])
+                print(formula)
+            elif formula[i] == '-':
+                formula[i] = sub(float(formula[i - 1]), float(formula[i + 1]))
+                print(formula)
+                formula.remove(formula[i + 1])
+                print(formula)
+                formula.remove(formula[i - 1])
+                print(formula)
+            else:
+                i += 1
+
+
+
+
+'''
+j = 0
+while j < len(formula)-1:
+    if formula[j] == '*':
+        formula[j] = mul(float(formula[j-1]), float(formula[j+1]))
+        print(formula)
+        formula.remove(formula[j+1])
+        formula.remove(formula[j-1])
+        print(formula)
+    elif formula[j] == '/':
+        formula[j] = div(float(formula[j-1]), float(formula[j+1]))
+        formula.remove(formula[j+1])
+        formula.remove(formula[j-1])
+        print(formula)
+    else:
+        j += 1
+    if len(formula)-1 == 1:
+        break
+
+print(formula)
+'''
+'''
+if type(formula) == 'int':
+    int(formula)
+'''
+'''
 for i in range(len(formula)):
     if '*' in formula:
         sign = formula.index("*")
@@ -45,3 +149,4 @@ for i in range(len(formula)):
     else:
         pass
 print("Result: {}".format(formula))
+'''
