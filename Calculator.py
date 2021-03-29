@@ -2,151 +2,43 @@
 formula = []
 
 while True:
-    term = input("계산식을 입력하시오")
-    if term == "=":
+    term = input("계산식을 입력하시오") # 값을 입력받아 term에 임시 저장
+    if term == "=": # term에 '='이 입력되면 입력 종료
         break
-    formula.append(term)
-    if formula[0].isnumeric() == False:
+    formula.append(term) # 입력된 값을 formula 리스트에 저장
+    if not formula[0].isnumeric(): # 예외처리1) 첫 입력값 숫자가 아닐 경우 종료
         print("잘못된 식입니다.")
         quit()
-    for i in range(len(formula)):
-        if formula[i].isnumeric == False and formula[i+1].isnumeric == False:
+    for num in range(1, len(formula)): # 예외처리2) 연속되는 입력값의 자료형이 같은 경우 종료
+        if formula[num].isdecimal() == formula[num-1].isdecimal():
             print("잘못된 식입니다.")
+            quit()
+    for number in formula[1::2]: # 예외처리3) 지정되지 않은 부호 입력시 종료
+        if number not in ["*", "/", "+", "-"]:
+            print("잘못된 식입니다.")
+            quit()
 
-print(formula)
 
 from lib.Math import *
-'''
+
 i = 0
-for i in range(len(formula)-1):
-    if '*' in formula or '/' in formula:
-        j = 0
-        while j < len(formula)-1:
-            if formula[j] == '*':
-                formula[j] = mul(float(formula[j-1]), float(formula[j+1]))
-                print(formula)
-                formula.remove(formula[j+1])
-                formula.remove(formula[j-1])
-                print(formula)
-            elif formula[j] == '/':
-                formula[j] = div(float(formula[j-1]), float(formula[j+1]))
-                formula.remove(formula[j+1])
-                formula.remove(formula[j-1])
-                print(formula)
-            else:
-                j += 1
-
-    else:
-        j = 0
-        while j < len(formula)-1:
-            if formula[j] == '+':
-                formula[j] = add(float(formula[j-1]), float(formula[j+1]))
-                formula.remove(formula[j+1])
-                formula.remove(formula[j-1])
-                print(formula)
-            elif formula[j] == '-':
-                formula[j] = sub(float(formula[j-1]), float(formula[j+1]))
-                formula.remove(formula[j+1])
-                formula.remove(formula[j-1])
-                print(formula)
-            else:
-                j += 1
-print(formula)
-'''
-
-for i in range(len(formula)):
-    if '*' in formula or '/' in formula:
-        while len(formula) > 1:
-            if formula[i] == '*':
-                formula[i] = mul(float(formula[i - 1]), float(formula[i + 1]))
-                print(formula)
-                formula.remove(formula[i + 1])
-                print(formula)
-                formula.remove(formula[i - 1])
-                print(formula)
-            elif formula[i] == '/':
-                formula[i] = div(float(formula[i - 1]), float(formula[i + 1]))
-                print(formula)
-                formula.remove(formula[i + 1])
-                print(formula)
-                formula.remove(formula[i - 1])
-                print(formula)
-            else:
-                i += 1
-    else:
-        while len(formula) > 1:
-            if formula[i] == '+':
-                formula[i] = add(float(formula[i - 1]), float(formula[i + 1]))
-                print(formula)
-                formula.remove(formula[i + 1])
-                print(formula)
-                formula.remove(formula[i - 1])
-                print(formula)
-            elif formula[i] == '-':
-                formula[i] = sub(float(formula[i - 1]), float(formula[i + 1]))
-                print(formula)
-                formula.remove(formula[i + 1])
-                print(formula)
-                formula.remove(formula[i - 1])
-                print(formula)
-            else:
-                i += 1
-
-
-
-
-'''
-j = 0
-while j < len(formula)-1:
-    if formula[j] == '*':
-        formula[j] = mul(float(formula[j-1]), float(formula[j+1]))
-        print(formula)
-        formula.remove(formula[j+1])
-        formula.remove(formula[j-1])
-        print(formula)
-    elif formula[j] == '/':
-        formula[j] = div(float(formula[j-1]), float(formula[j+1]))
-        formula.remove(formula[j+1])
-        formula.remove(formula[j-1])
-        print(formula)
-    else:
-        j += 1
-    if len(formula)-1 == 1:
-        break
-
-print(formula)
-'''
-'''
-if type(formula) == 'int':
-    int(formula)
-'''
-'''
-for i in range(len(formula)):
-    if '*' in formula:
-        sign = formula.index("*")
-        formula[sign] = mul(int(formula[sign-1]), int(formula[sign+1]))
-        formula.remove(formula[sign+1])
-        formula.remove(formula[sign-1])
-        print(formula)
-    elif '/' in formula:
-        sign = formula.index("/")
-        formula[sign] = div(int(formula[sign-1]), int(formula[sign+1]))
-        formula.remove(formula[sign+1])
-        formula.remove(formula[sign-1])
-        print(formula)
-    elif '-' in formula:
-        sign = formula.index("-")
-        formula[sign] = sub(int(formula[sign-1]), int(formula[sign+1]))
-        formula.remove(formula[sign+1])
-        formula.remove(formula[sign-1])
-        print(formula)
-    elif '+' in formula:
-        sign = formula.index("+")
-        formula[sign] = add(int(formula[sign-1]), int(formula[sign+1]))
-        formula.remove(formula[sign+1])
-        formula.remove(formula[sign-1])
-        print(formula)
-    else:
-        pass
+while len(formula) > 1:
+    if '*' in formula or '/' in formula: # 곱셈, 나눗셈 우선 계산
+        if formula[i] == '*': # i 번째 입력값이 곱셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
+            calc(formula, '*', i)
+            i = 0
+        elif formula[i] == '/': # i 번째 입력값이 나눗셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
+            calc(formula, '/', i)
+            i = 0
+        else:
+            i += 1 # i 번째 입력값이 숫자일 경우 i 값에 1을 더해 다음 입력값 검사
+    else:  # 덧셈, 뺄셈 계산
+        if formula[i] == '+': # i 번째 입력값이 덧셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
+            calc(formula, '+', i)
+            i = 0
+        elif formula[i] == '-': # i 번째 입력값이 뺄셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
+            calc(formula, '-', i)
+            i = 0
+        else:
+            i += 1 # i 번째 입력값이 숫자일 경우 i 값에 1을 더해 다음 입력값 검사
 print("Result: {}".format(formula))
-'''
