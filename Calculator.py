@@ -58,6 +58,7 @@ while 1:
 
         str = []        # 자료 저장 리스트
         temp = ''       # 문자 임시저장소
+
         test = True     # 문자, 숫자 확인 스위치(참 = 숫자검사, 거짓 = 부호검사)
         while True:
             temp = input(" >")
