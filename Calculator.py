@@ -80,18 +80,14 @@ while 1:
         count = 0
         while count < len(str):
             if str[count] == '*' or str[count] == '/':
-                str[count-1] = calculat(str[count], float(str[count-1]), float(str[count+1]))
-                del str[count]
-                del str[count]
+                function2(str, count)    # 계산 함수
             else:
                 count += 1
 
         count = 0
         while count < len(str):
             if str[count] == '+' or str[count] == '-':
-                str[count-1] = calculat(str[count], float(str[count-1]), float(str[count+1]))
-                del str[count]
-                del str[count]
+                function2(str, count)    # 계산 함수
             else:
                 count += 1
 
