@@ -1,10 +1,11 @@
 from lib.Math import *
 
-mode = input("모드 : ")
+mode = input("1 : 한번에 입력\n2 : 하나씩 입력\n모드 : ")
 
+#한번에 입력
 if mode == '1':
 
-    str = input("입력 >")
+    str = input("입력 (=제외) >")
 
     sign = []  # 부호 리스트
     number = []  # 숫자 리스트
@@ -28,7 +29,7 @@ if mode == '1':
 
     count = 0  # 인덱스 변수
     while count < len(sign):
-        if sign[count] == '*' or sign[count] == '/':  # 곱나눔 계산
+        if sign[count] == '*' or sign[count] == '/':  # 곱하기, 나누기 계산
             number[count] = calculat(sign[count], float(number[count]), float(number[count + 1]))
             del number[count + 1]
             del sign[count]
@@ -37,7 +38,7 @@ if mode == '1':
 
     count = 0
     while count < len(sign):
-        if sign[count] == '+' or sign[count] == '-':  # 합빼기 계산
+        if sign[count] == '+' or sign[count] == '-':  # 더하기, 빼기 계산
             number[count] = calculat(sign[count], float(number[count]), float(number[count + 1]))
             del number[count + 1]
             del sign[count]
@@ -48,8 +49,10 @@ if mode == '1':
     print(number)
     # print(str) 5+32-2*13/5
 
+#하나씩 입력 계산기
 elif mode == '2':
 
+    print("(=까지 입력)")
     str = []
     temp = ''
     while True:
@@ -59,24 +62,24 @@ elif mode == '2':
         else:
             break
 
-    print(str)
 
     count = 0
     while count < len(str):
-        if str[count] == '*' or '/':
-            str = calculat2('*', str, count)
-            str = calculat2('/', str, count)
+        if str[count] == '*' or str[count] == '/':
+            str[count-1] = calculat(str[count], float(str[count-1]), float(str[count+1]))
+            del str[count]
+            del str[count]
         else:
             count += 1
-            print(str)
 
     count = 0
     while count < len(str):
-        if str[count] == '+' or '-':
-            str = calculat2('+', str, count)
-            str = calculat2('-', str, count)
+        if str[count] == '+' or str[count] == '-':
+            str[count-1] = calculat(str[count], float(str[count-1]), float(str[count+1]))
+            del str[count]
+            del str[count]
         else:
             count += 1
-            print(str)
 
     print(str)
+# 3*2+2/2-1
