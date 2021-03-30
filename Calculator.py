@@ -2,7 +2,7 @@ from tkinter import *
 root = Tk()
 
 root.title("Calculator")
-root.geometry("400x500+500+100")
+root.geometry("400x550+500+100")
 root.resizable(0, 0)
 
 upper_frame = Frame(root, width=400, height=70)
@@ -15,27 +15,42 @@ entry = Entry(upper_frame, width=20, font=("Courier",18), borderwidth=5)
 entry.pack()
 entry.insert(0,"")
 
-def click(n):
+def b_click(n):
     current = entry.get()
     entry.delete(0,END)
     entry.insert(0, str(current) + str(n))
 
+def b_clear():
+    pass
+
+
+#버튼 0~9 설정
 bnum =[]
-#for number in range(10):
-#    button = Button(down_frame, text=str(number), font=("Courier",18), padx = 15, pady = 10, command = lambda: click(number))
-#    bnum.append(button)
+for number in range(10):
+    button1 = Button(down_frame, text=str(number), font=("Courier",18), padx = 15, pady = 10, command = lambda number=number: b_click(number))
+    bnum.append(button1)
 
-button = Button(down_frame, text=str(1), font=("Courier",18), padx = 15, pady = 10, command = lambda: click(1))
-button2 = Button(down_frame, text=str(2), font=("Courier",18), padx = 15, pady = 10, command = lambda: click(2))
-count=1
-#for row in range(3):
-#    for column in range(3):
-#        bnum[count].grid(row = 2-row,column = column, padx = 5, pady = 5)
-#        count += 1
+countnum=1
+for row in range(3):
+    for column in range(3):
+        bnum[countnum].grid(row = 2-row,column = column, padx = 5, pady = 5)
+        countnum += 1
 
-#bnum[0].grid(row = 3, column = 1, padx = 5, pady = 5)
-button.grid(row = 3, column = 2, padx = 5, pady = 5)
-button2.grid(row = 3, column = 3, padx = 5, pady = 5)
+bnum[0].grid(row = 3, column = 1, padx = 5, pady = 5)
+
+#부호 설정
+bsign = []
+for sign in ["C","*","/","+","-","="]:
+    button2 = Button(down_frame, text= sign, font=("Courier",18), padx = 15, pady = 10, command = lambda sign=sign: b_click(sign))
+    bsign.append(button2)
+
+countsign = 1
+for row in range(5):
+    bsign[countsign].grid(row = row,column = 3, padx = 5, pady = 5)
+    countsign += 1
+
+bsign[0].grid(row = 4, column = 2, padx = 5, pady = 5)
+
 
 
 root.mainloop()
