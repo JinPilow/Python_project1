@@ -1,4 +1,48 @@
+from tkinter import *
+root = Tk()
 
+root.title("Calculator")
+root.geometry("400x500+500+100")
+root.resizable(0, 0)
+
+upper_frame = Frame(root, width=400, height=70)
+upper_frame.pack(pady=40)
+
+down_frame = Frame(root, width=400, height=100)
+down_frame.pack(padx=10, pady=10)
+
+entry = Entry(upper_frame, width=20, font=("Courier",18), borderwidth=5)
+entry.pack()
+entry.insert(0,"")
+
+def click(n):
+    current = entry.get()
+    entry.delete(0,END)
+    entry.insert(0, str(current) + str(n))
+
+bnum =[]
+#for number in range(10):
+#    button = Button(down_frame, text=str(number), font=("Courier",18), padx = 15, pady = 10, command = lambda: click(number))
+#    bnum.append(button)
+
+button = Button(down_frame, text=str(1), font=("Courier",18), padx = 15, pady = 10, command = lambda: click(1))
+button2 = Button(down_frame, text=str(2), font=("Courier",18), padx = 15, pady = 10, command = lambda: click(2))
+count=1
+#for row in range(3):
+#    for column in range(3):
+#        bnum[count].grid(row = 2-row,column = column, padx = 5, pady = 5)
+#        count += 1
+
+#bnum[0].grid(row = 3, column = 1, padx = 5, pady = 5)
+button.grid(row = 3, column = 2, padx = 5, pady = 5)
+button2.grid(row = 3, column = 3, padx = 5, pady = 5)
+
+
+root.mainloop()
+
+
+
+'''
 formula = []
 
 while True:
@@ -42,3 +86,4 @@ while len(formula) > 1:
         else:
             i += 1 # i 번째 입력값이 숫자일 경우 i 값에 1을 더해 다음 입력값 검사
 print("Result: {}".format(formula))
+'''
