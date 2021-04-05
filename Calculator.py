@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import messagebox
 from lib.Math import *
 root = Tk()
 
@@ -24,7 +25,11 @@ def b_click(n):
 
 def b_clear():
     current = entry.get()
-    entry.delete(-1)
+    temp = list(current)
+    temp.remove(current[-1])
+    current = ''.join(temp)
+    entry.delete(0, END)
+    entry.insert(0, current)
 
 def b_allclear():
     entry.delete(0,END)
@@ -32,21 +37,26 @@ def b_allclear():
 def equal():
     term = entry.get()
     formula = []
-    a = ''
+    temp = ''
     i = 0
-    while True:
-        if term[i].isdigit:
-            a += term[i]
-            i += 1
-            print(a)
-        elif not term[i].isdigit:
-            formula.append(a)
-            formula.append(term[i])
-            i += 1
-            print(formula)
-        if i == len(term): break
+    num = True
+    if not term[0].isdigit():
+        messagebox.showinfo("Error", "시작문자는 숫자로 입력해주세요.")
+    else:
+        while True:
+            if term[i].isdigit() or term[i] == ".":
+                temp += term[i]
+                i += 1
+            elif not term[i].isdigit():
+                formula.append(temp)
+                formula.append(term[i])
+                temp = ''
+                i += 1
+            if i == len(term)-1:
+                temp += term[i]
+                formula.append(temp)
+                break
 
-    print(formula)
 
     i = 0
     while len(formula) > 1:
@@ -68,24 +78,26 @@ def equal():
                 i = 0
             else:
                 i += 1  # i 번째 입력값이 숫자일 경우 i 값에 1을 더해 다음 입력값 검사
-    print("Result: {}".format(formula))
-
-#33+4-2
-
+    entry.delete(0, END)
+    entry.insert(0, formula[0])
 
 #숫자 버튼 설정
-bnum =[]
+bnum = []
 for number in range(10):
     button1 = Button(down_frame, text=str(number), font=("Courier",18), padx = 15, pady = 10, command = lambda number=number: b_click(number))
     bnum.append(button1)
+bnum.append(Button(down_frame, text="00", font=("Courier",18), padx = 9, pady = 10, command = lambda: b_click('00')))
+bnum.append(Button(down_frame, text=".", font=("Courier",18), padx = 15, pady = 10, command = lambda: b_click('.')))
 
-countnum=1
+countnum = 1
 for row in range(3):
     for column in range(3):
         bnum[countnum].grid(row = 2-row,column = column, padx = 5, pady = 5)
         countnum += 1
 
 bnum[0].grid(row = 3, column = 1, padx = 5, pady = 5)
+bnum[10].grid(row = 3, column = 0, padx = 5, pady = 5)
+bnum[11].grid(row = 3, column = 2, padx = 5, pady = 5)
 
 #부호 버튼 설정
 bsign = []
@@ -95,7 +107,7 @@ for sign in ["*","/","+","-"]:
 
 bsign.append(Button(down_frame, text= "=", font=("Courier",18), padx = 15, pady = 10, command = lambda: equal()))
 bsign.append(Button(down_frame, text= "C", font=("Courier",18), padx = 15, pady = 10, command = lambda: b_clear()))
-bsign.append(Button(down_frame, text= "AC", font=("Courier",18), padx = 15, pady = 10, command = lambda: b_allclear()))
+bsign.append(Button(down_frame, text= "AC", font=("Courier",18), padx = 9, pady = 10, command = lambda: b_allclear()))
 
 countsign = 0
 for row in range(5):
@@ -108,11 +120,6 @@ bsign[6].grid(row = 4, column = 0, padx = 5, pady = 5)
 
 
 root.mainloop()
-
-
-
-
-
 
 '''
 formula = []

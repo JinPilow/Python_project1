@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 def add(a,b):
     return a+b
 
@@ -12,13 +14,13 @@ def div(a,b):
 
 def calc(formula, sign, i):
     if sign == '*':
-        formula[i] = mul(int(formula[i - 1]), int(formula[i + 1]))
+        formula[i] = mul(Decimal(formula[i - 1]), Decimal(formula[i + 1]))
     elif sign == '/':
-        formula[i] = div(int(formula[i - 1]), int(formula[i + 1]))
+        formula[i] = div(Decimal(formula[i - 1]), Decimal(formula[i + 1]))
     elif sign == '+':
-        formula[i] = add(int(formula[i - 1]), int(formula[i + 1]))
+        formula[i] = add(Decimal(formula[i - 1]), Decimal(formula[i + 1]))
     elif sign == '-':
-        formula[i] = sub(int(formula[i - 1]), int(formula[i + 1]))
+        formula[i] = sub(Decimal(formula[i - 1]), Decimal(formula[i + 1]))
     del formula[i + 1]
     del formula[i - 1]
     return formula
