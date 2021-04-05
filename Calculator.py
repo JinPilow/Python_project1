@@ -41,8 +41,7 @@ def equal():
     formula = []
     temp = ''
     i = 0
-    test = True
-    if not term[0].isdigit():
+    if term[0] in ("*","/"):
         messagebox.showinfo("Error", "시작문자는 숫자로 입력해주세요.")
     else:
         while True:
@@ -54,18 +53,17 @@ def equal():
                 formula.append(term[i])
                 temp = ''
                 i += 1
-            for num in range(len(formula)):
-                if num == 0:
-                    pass
-                elif formula[num].isdecimal() == formula[num-1].isdecimal():
-                    messagebox.showinfo("Error", "연산할 수 없습니다.")
-                    entry.delete(0, END)
-                    break
             if i == len(term)-1:
                 temp += term[i]
                 formula.append(temp)
                 break
-
+        for num in range(len(formula)):
+            if num == 0:
+                pass
+            elif formula[num].isdecimal() == formula[num-1].isdecimal():
+                messagebox.showinfo("Error", "연산할 수 없습니다.")
+                entry.delete(0, END)
+                break
     try:
         i = 0
         while len(formula) > 1:
