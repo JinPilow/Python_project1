@@ -44,22 +44,14 @@ def equal():
         messagebox.showinfo("Error", "시작문자는 숫자로 입력해주세요.")
     else:
         while True:
-            if test:
-                if term[i].isdigit() or term[i] == ".":
-                    temp += term[i]
-                    i += 1
-                else:
-                    messagebox.showinfo("Error", "연산 불가능합니다.")
-                    break
-            else:
-                if not term[i].isdigit():
-                    formula.append(temp)
-                    formula.append(term[i])
-                    temp = ''
-                    i += 1
-                else:
-                    messagebox.showinfo("Error", "연산 불가능합니다.")
-                    break
+            if term[i].isdigit() or term[i] == ".":
+                temp += term[i]
+                i += 1
+            elif not term[i].isdigit():
+                formula.append(temp)
+                formula.append(term[i])
+                temp = ''
+                i += 1
             if i == len(term)-1:
                 temp += term[i]
                 formula.append(temp)
