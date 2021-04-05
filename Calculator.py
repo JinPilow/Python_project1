@@ -1,6 +1,8 @@
 from tkinter import *
 from tkinter import messagebox
 from lib.Math import *
+from decimal import Decimal
+
 root = Tk()
 
 root.title("Calculator")
@@ -52,6 +54,13 @@ def equal():
                 formula.append(term[i])
                 temp = ''
                 i += 1
+            for num in range(len(formula)):
+                if num == 0:
+                    pass
+                elif formula[num].isdecimal() == formula[num-1].isdecimal():
+                    messagebox.showinfo("Error", "연산할 수 없습니다.")
+                    entry.delete(0, END)
+                    break
             if i == len(term)-1:
                 temp += term[i]
                 formula.append(temp)
@@ -86,10 +95,13 @@ def equal():
 #숫자 버튼 설정
 bnum = []
 for number in range(10):
-    button1 = Button(down_frame, text=str(number), font=("Courier",18), padx = 15, pady = 10, command = lambda number=number: b_click(number))
+    button1 = Button(down_frame, text=str(number), font=("Courier",18), padx = 15, pady = 10,
+                     command = lambda number=number: b_click(number))
     bnum.append(button1)
-bnum.append(Button(down_frame, text="00", font=("Courier",18), padx = 9, pady = 10, command = lambda: b_click('00')))
-bnum.append(Button(down_frame, text=".", font=("Courier",18), padx = 15, pady = 10, command = lambda: b_click('.')))
+bnum.append(Button(down_frame, text="00", font=("Courier",18), padx = 9, pady = 10,
+                   command = lambda: b_click('00')))
+bnum.append(Button(down_frame, text=".", font=("Courier",18), padx = 15, pady = 10,
+                   command = lambda: b_click('.')))
 
 countnum = 1
 for row in range(3):
@@ -104,12 +116,16 @@ bnum[11].grid(row = 3, column = 2, padx = 5, pady = 5)
 #부호 버튼 설정
 bsign = []
 for sign in ["*","/","+","-"]:
-    button2 = Button(down_frame, text= sign, font=("Courier",18), padx = 15, pady = 10, command = lambda sign=sign: b_click(sign))
+    button2 = Button(down_frame, text= sign, font=("Courier",18), padx = 15, pady = 10,
+                     command = lambda sign=sign: b_click(sign))
     bsign.append(button2)
 
-bsign.append(Button(down_frame, text= "=", font=("Courier",18), padx = 15, pady = 10, command = lambda: equal()))
-bsign.append(Button(down_frame, text= "C", font=("Courier",18), padx = 15, pady = 10, command = lambda: b_clear()))
-bsign.append(Button(down_frame, text= "AC", font=("Courier",18), padx = 9, pady = 10, command = lambda: b_allclear()))
+bsign.append(Button(down_frame, text= "=", font=("Courier",18), padx = 15, pady = 10,
+                    command = lambda: equal()))
+bsign.append(Button(down_frame, text= "C", font=("Courier",18), padx = 15, pady = 10,
+                    command = lambda: b_clear()))
+bsign.append(Button(down_frame, text= "AC", font=("Courier",18), padx = 9, pady = 10,
+                    command = lambda: b_allclear()))
 
 countsign = 0
 for row in range(5):
