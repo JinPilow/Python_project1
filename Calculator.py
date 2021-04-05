@@ -39,47 +39,57 @@ def equal():
     formula = []
     temp = ''
     i = 0
-    num = True
+    test = True
     if not term[0].isdigit():
         messagebox.showinfo("Error", "시작문자는 숫자로 입력해주세요.")
     else:
         while True:
-            if term[i].isdigit() or term[i] == ".":
-                temp += term[i]
-                i += 1
-            elif not term[i].isdigit():
-                formula.append(temp)
-                formula.append(term[i])
-                temp = ''
-                i += 1
+            if test:
+                if term[i].isdigit() or term[i] == ".":
+                    temp += term[i]
+                    i += 1
+                else:
+                    messagebox.showinfo("Error", "연산 불가능합니다.")
+                    break
+            else:
+                if not term[i].isdigit():
+                    formula.append(temp)
+                    formula.append(term[i])
+                    temp = ''
+                    i += 1
+                else:
+                    messagebox.showinfo("Error", "연산 불가능합니다.")
+                    break
             if i == len(term)-1:
                 temp += term[i]
                 formula.append(temp)
                 break
 
-
-    i = 0
-    while len(formula) > 1:
-        if '*' in formula or '/' in formula:  # 곱셈, 나눗셈 우선 계산
-            if formula[i] == '*':  # i 번째 입력값이 곱셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
-                calc(formula, '*', i)
-                i = 0
-            elif formula[i] == '/':  # i 번째 입력값이 나눗셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
-                calc(formula, '/', i)
-                i = 0
-            else:
-                i += 1  # i 번째 입력값이 숫자일 경우 i 값에 1을 더해 다음 입력값 검사
-        else:  # 덧셈, 뺄셈 계산
-            if formula[i] == '+':  # i 번째 입력값이 덧셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
-                calc(formula, '+', i)
-                i = 0
-            elif formula[i] == '-':  # i 번째 입력값이 뺄셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
-                calc(formula, '-', i)
-                i = 0
-            else:
-                i += 1  # i 번째 입력값이 숫자일 경우 i 값에 1을 더해 다음 입력값 검사
-    entry.delete(0, END)
-    entry.insert(0, formula[0])
+    try:
+        i = 0
+        while len(formula) > 1:
+            if '*' in formula or '/' in formula:  # 곱셈, 나눗셈 우선 계산
+                if formula[i] == '*':  # i 번째 입력값이 곱셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
+                    calc(formula, '*', i)
+                    i = 0
+                elif formula[i] == '/':  # i 번째 입력값이 나눗셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
+                    calc(formula, '/', i)
+                    i = 0
+                else:
+                    i += 1  # i 번째 입력값이 숫자일 경우 i 값에 1을 더해 다음 입력값 검사
+            else:  # 덧셈, 뺄셈 계산
+                if formula[i] == '+':  # i 번째 입력값이 덧셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
+                    calc(formula, '+', i)
+                    i = 0
+                elif formula[i] == '-':  # i 번째 입력값이 뺄셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
+                    calc(formula, '-', i)
+                    i = 0
+                else:
+                    i += 1  # i 번째 입력값이 숫자일 경우 i 값에 1을 더해 다음 입력값 검사
+        entry.delete(0, END)
+        entry.insert(0, formula[0])
+    except IndexError as e:
+        print(e)
 
 #숫자 버튼 설정
 bnum = []
