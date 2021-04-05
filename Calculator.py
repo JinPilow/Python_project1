@@ -28,7 +28,7 @@ def b_click(n):
 def b_clear():
     current = entry.get()
     temp = list(current)
-    temp.remove(current[-1])
+    del temp[-1]
     current = ''.join(temp)
     entry.delete(0, END)
     entry.insert(0, current)
@@ -41,7 +41,7 @@ def equal():
     formula = []
     temp = ''
     i = 0
-    if term[0] in ("*","/"):
+    if not term[0].isdigit():
         messagebox.showinfo("Error", "시작문자는 숫자로 입력해주세요.")
     else:
         while True:
@@ -89,7 +89,6 @@ def equal():
         entry.insert(0, formula[0])
     except IndexError as e:
         print(e)
-
 #숫자 버튼 설정
 bnum = []
 for number in range(10):
