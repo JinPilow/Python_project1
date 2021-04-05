@@ -11,9 +11,10 @@ calculator.resizable(False, False)
 inputs = Entry(calculator, font=("Courier", 20))
 inputs.grid(row=0, column=0, columnspan=4, sticky=W + E + S + N, pady=15, ipady=10)
 
-btnStr = ["7", "8", "9", "*", "4", "5", "6", "/", "1", "2", "3", "=", "0", "+", "-", "AC", "C", ".", ""]
+btnStr = ["7", "8", "9", "*", "4", "5", "6", "/", "1", "2", "3", "=", "0", "+", "-", "AC", "C", ".", "00"]
 
 btns = []
+restart = 0
 for i in range(len(btnStr)):
     btns.append(Button(calculator, text=str(btnStr[i]), font=("Courier", 18), overrelief="solid", width=6, height=2,
                        command=lambda i=i: onclick(btnStr[i])))
