@@ -20,6 +20,9 @@ while 1:
                     number.append(temp)
                     temp = ""
                     sign.append(str[i])
+                    if issign(str[i+1]):
+                        print("연산자가 연속으로 나옵니다!")
+                        quit()
                 else:  # 그 의외의 문자면 경고 출력후 프로그램 종료
                     print("숫자와 사칙연산만 입력해주세요!")
                     quit()
