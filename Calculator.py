@@ -1,4 +1,5 @@
 from tkinter import *
+from lib.Math import *
 root = Tk()
 
 root.title("Calculator")
@@ -31,15 +32,45 @@ def b_allclear():
 def equal():
     term = entry.get()
     formula = []
-    a = []
+    a = ''
     i = 0
     while True:
         if term[i].isdigit:
-            pass
+            a += term[i]
+            i += 1
+            print(a)
         elif not term[i].isdigit:
+            formula.append(a)
+            formula.append(term[i])
+            i += 1
+            print(formula)
+        if i == len(term): break
 
+    print(formula)
 
+    i = 0
+    while len(formula) > 1:
+        if '*' in formula or '/' in formula:  # 곱셈, 나눗셈 우선 계산
+            if formula[i] == '*':  # i 번째 입력값이 곱셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
+                calc(formula, '*', i)
+                i = 0
+            elif formula[i] == '/':  # i 번째 입력값이 나눗셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
+                calc(formula, '/', i)
+                i = 0
+            else:
+                i += 1  # i 번째 입력값이 숫자일 경우 i 값에 1을 더해 다음 입력값 검사
+        else:  # 덧셈, 뺄셈 계산
+            if formula[i] == '+':  # i 번째 입력값이 덧셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
+                calc(formula, '+', i)
+                i = 0
+            elif formula[i] == '-':  # i 번째 입력값이 뺄셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
+                calc(formula, '-', i)
+                i = 0
+            else:
+                i += 1  # i 번째 입력값이 숫자일 경우 i 값에 1을 더해 다음 입력값 검사
+    print("Result: {}".format(formula))
 
+#33+4-2
 
 
 #숫자 버튼 설정
