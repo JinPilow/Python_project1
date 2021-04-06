@@ -9,12 +9,12 @@ calculator.geometry("400x500+500+300")
 calculator.resizable(False, False)
 
 inputs = Entry(calculator, font=("Courier", 20))
-inputs.grid(row=0, column=0, columnspan=4, sticky=W + E + S + N, pady=15, ipady=10)
+inputs.grid(row=0, column=0, columnspan=4, sticky=W + E + S + N, pady=15, ipady=10, padx=5)
 
 btnStr = ["7", "8", "9", "*", "4", "5", "6", "/", "1", "2", "3", "=", "0", "+", "-", "AC", "C", ".", "00"]
 
 btns = []
-restart = 0
+restart = False
 for i in range(len(btnStr)):
     btns.append(Button(calculator, text=str(btnStr[i]), font=("Courier", 18), overrelief="solid", width=6, height=2,
                        command=lambda i=i: onclick(btnStr[i])))
@@ -34,12 +34,18 @@ btns[11].grid(row=3, column=3, padx=2, rowspan=2, sticky=W + E + S + N, pady=2)
 
 
 def onclick(text):
+    global restart
     if text == "=":
         calc(Entry.get(inputs))
+        restart = True
     elif text == "AC":
         inputs.delete(0, END)
     elif text == "C":
         inputs.delete(len(Entry.get(inputs)) - 1, END)
+    elif restart:
+        inputs.delete(0, END)
+        inputs.insert(0, text)
+        restart = False
     else:
         tinput = Entry.get(inputs) + text
         inputs.delete(0, END)
@@ -49,30 +55,35 @@ def onclick(text):
 def calc(s):
     str = s
 
-    sign = []  # 부호 리스트
-    number = []  # 숫자 리스트
+    sign = ["+"]  # 부호 리스트
+    number = ["0"]  # 숫자 리스트
     temp = ""  # 십의자리 이상 저장용
     if str[0] == "-":
-        temp += str[0]
+        del sign[0]
+        sign.append("-")
+        str = str[1:]
+    elif str[0] == "+":
         str = str[1:]
     if str[0].isdigit():  # 숫자로 시작하는지 확인
-        for i in range(len(str)):
+        i = 0
+        while i < len(str):
             if str[i].isdigit() or str[i] == ".":  # 숫자확인후 temp에 저장
                 temp += str[i]
+                i += 1
             elif issign(str[i]):  # 부호일 경우 temp를 number에 저장하고 부호는 sign에 저장
                 number.append(temp)
                 temp = ""
                 sign.append(str[i])
                 if issign(str[i + 1]):
-                    inputs.delete(0, END)
-                    inputs.insert(0, "연산자가 연속으로 나옵니다!")
-                    return
-            else:  # 그 의외의 문자면 경고 출력후 프로그램 종료
-                inputs.delete(0, END)
-                inputs.insert(0, "숫자와 사칙연산만 입력해주세요!")
-                print("숫자와 사칙연산만 입력해주세요!")
-                return
-            if i + 1 == len(str):  # 마지막 숫자 number에 저장
+                    if str[i+1] == "-":
+                        temp += str[i+1]
+                        i += 1
+                    else:
+                        inputs.delete(0, END)
+                        inputs.insert(0, "연산자가 연속으로 나옵니다!")
+                        return
+                i += 1
+            if i == len(str):  # 마지막 숫자 number에 저장
                 number.append(temp)
     else:  # 예외처리
         inputs.delete(0, END)
@@ -91,6 +102,8 @@ def calc(s):
 
     count = 0
     while count < len(sign):
+        print(number)
+        print(sign)
         if sign[count] == '+' or sign[count] == '-':  # 더하기, 빼기 계산
             number[count] = calculat(sign[count], Decimal(number[count]), Decimal(number[count + 1]))
             del number[count + 1]
