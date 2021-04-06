@@ -64,18 +64,19 @@ def calc(s):
         str = str[1:]
     elif str[0] == "+":
         str = str[1:]
+
     if str[0].isdigit():  # 숫자로 시작하는지 확인
         i = 0
         while i < len(str):
-            if str[i].isdigit() or str[i] == ".":  # 숫자확인후 temp에 저장
+            if str[i].isdigit() or str[i] == ".":  # 숫자 혹은 점 확인후 temp에 저장
                 temp += str[i]
                 i += 1
             elif issign(str[i]):  # 부호일 경우 temp를 number에 저장하고 부호는 sign에 저장
                 number.append(temp)
                 temp = ""
                 sign.append(str[i])
-                if issign(str[i + 1]):
-                    if str[i+1] == "-":
+                if issign(str[i + 1]):  # 다음이 부호가 + - 일 경우 temp에 부호 보내기
+                    if str[i+1] == "-" or str[i+1] == "+":
                         temp += str[i+1]
                         i += 1
                     else:
@@ -117,3 +118,20 @@ def calc(s):
 
 
 calculator.mainloop()
+
+# ++    o
+# +-    o
+# -+    o
+# --    o
+# *+    o
+# *-    o
+# /+    o
+# /-    o
+# +*    x
+# +/    x
+# -*    x
+# -/    x
+# **    x
+# */    x
+# /*    x
+# //    x
