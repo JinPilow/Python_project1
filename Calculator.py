@@ -36,12 +36,76 @@ def b_clear():
 def b_allclear():
     entry.delete(0,END)
 
+
+#4+32
+def switch_sign():
+    current = entry.get()
+    for i in current[::-1]:
+        if not i.isdigit():
+            temp = current[-current.index(i)-1:]
+            if float(temp) < 0:
+                currentre = current.replace(current[-current.index(i)-1:],
+                                            "+" + str(-float(current[-current.index(i)-1:])))
+                break
+            elif float(temp) > 0:
+                currentre = current.replace(current[-current.index(i) - 1:],
+                                            str(-float(current[-current.index(i) - 1:])))
+                break
+            elif float(temp) == 0:
+                currentre = 0
+            else:
+                messagebox.showinfo("Error", "기능을 수행할 수 없습니다.")
+        elif current.index(i) == 0:
+            temp = current[-current.index(i):]
+            if float(temp) < 0:
+                currentre = current.replace(current[-current.index(i):],
+                                            "+" + str(-float(current[-current.index(i):])))
+                break
+            elif float(temp) > 0:
+                currentre = current.replace(current[-current.index(i):],
+                                            str(-float(current[-current.index(i):])))
+                break
+            elif float(temp) == 0:
+                currentre = 0
+            else:
+                messagebox.showinfo("Error", "기능을 수행할 수 없습니다.")
+    entry.delete(0, END)
+    entry.insert(0, currentre)
+
+
+
+
+
+#-3*-2
+#3+3*-2
+#3-2 = 3+ -2    1.빼기 뒤에 다른 부호가 오면 '-'와 숫자를 하나로 묶음
+#+3+4           2.더하기가 식 맨 앞에 있거나 다른 부호 앞에 오면 생략한다.
+
 def equal():
     term = entry.get()
     formula = []
     temp = ''
     i = 0
-    if not term[0].isdigit():
+    while True:
+        if term[i].isdigit():
+            temp += term[i]
+
+
+
+
+
+'''
+def equal():
+    term = entry.get()
+    formula = []
+    temp = ''
+    i = 0
+    if term[0] == "-":
+        temp += "-"
+        term = term[1:]
+    elif term[0] == "+":
+        term = term[1:]
+    if not term[0].isdigit() or not term[-1].isdigit:
         messagebox.showinfo("Error", "시작문자는 숫자로 입력해주세요.")
     else:
         while True:
@@ -57,6 +121,7 @@ def equal():
                 temp += term[i]
                 formula.append(temp)
                 break
+        print(formula)
         for num in range(len(formula)):
             if num == 0:
                 pass
@@ -89,6 +154,7 @@ def equal():
         entry.insert(0, formula[0])
     except IndexError as e:
         print(e)
+'''
 #숫자 버튼 설정
 bnum = []
 for number in range(10):
@@ -121,8 +187,10 @@ bsign.append(Button(down_frame, text= "=", font=("Courier",18), padx = 15, pady 
                     command = lambda: equal()))
 bsign.append(Button(down_frame, text= "C", font=("Courier",18), padx = 15, pady = 10,
                     command = lambda: b_clear()))
-bsign.append(Button(down_frame, text= "AC", font=("Courier",18), padx = 9, pady = 10,
+bsign.append(Button(down_frame, text= "AC", font=("Courier",18), padx = 8, pady = 10,
                     command = lambda: b_allclear()))
+bsign.append(Button(down_frame, text= "+/-", font=("Courier",18), padx = 2, pady = 10,
+                    command = lambda: switch_sign()))
 
 countsign = 0
 for row in range(5):
@@ -131,8 +199,8 @@ for row in range(5):
 
 bsign[4].grid(row = 4, column = 3, padx = 5, pady = 5)
 bsign[5].grid(row = 4, column = 2, padx = 5, pady = 5)
-bsign[6].grid(row = 4, column = 0, padx = 5, pady = 5)
-
+bsign[6].grid(row = 4, column = 1, padx = 5, pady = 5)
+bsign[7].grid(row = 4, column = 0, padx = 5, pady = 5)
 
 root.mainloop()
 
