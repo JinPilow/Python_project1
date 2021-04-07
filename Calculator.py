@@ -20,59 +20,113 @@ entry.pack()
 entry.insert(0,"")
 
 
-def b_click(n):
-    current = entry.get()
-    entry.delete(0,END)
-    entry.insert(0, str(current) + str(n))
 
-def b_clear():
-    current = entry.get()
-    temp = list(current)
-    del temp[-1]
-    current = ''.join(temp)
-    entry.delete(0, END)
-    entry.insert(0, current)
+class Function:
+    def __init__(self):
+        self.count = 0
+        Function.current = entry.get()
 
-def b_allclear():
-    entry.delete(0,END)
+    def b_click(self, n):
+        Function.current = entry.get()
+        entry.delete(0,END)
+        entry.insert(0, str(Function.current) + str(n))
+
+        if not str(n).isdigit():
+            self.count = 0
+        elif str(n) == "00":
+            self.count += 2
+        else:
+            self.count += 1
+            print(self.count)
+
+    def b_clear(self):
+        Function.current = entry.get()
+        temp = list(Function.current)
+        del temp[-1]
+        Function.current = ''.join(temp)
+        entry.delete(0, END)
+        entry.insert(0, Function.current)
+        self.count = 0
 
 
-#4+32
-def switch_sign():
-    current = entry.get()
-    for i in current[::-1]:
-        if not i.isdigit():
-            temp = current[-current.index(i)-1:]
-            if float(temp) < 0:
-                currentre = current.replace(current[-current.index(i)-1:],
-                                            "+" + str(-float(current[-current.index(i)-1:])))
-                break
-            elif float(temp) > 0:
-                currentre = current.replace(current[-current.index(i) - 1:],
-                                            str(-float(current[-current.index(i) - 1:])))
-                break
-            elif float(temp) == 0:
-                currentre = 0
-            else:
+    def b_allclear(self):
+        entry.delete(0,END)
+        self.count = 0
+
+    def switch_sign(self):
+        Function.current = entry.get()
+        temp = Function.current[-self.count-1:]
+        if not temp[0].isdigit():
+            if len(temp) == 1:
                 messagebox.showinfo("Error", "기능을 수행할 수 없습니다.")
-        elif current.index(i) == 0:
-            temp = current[-current.index(i):]
-            if float(temp) < 0:
-                currentre = current.replace(current[-current.index(i):],
-                                            "+" + str(-float(current[-current.index(i):])))
-                break
+            elif float(temp) < 0:
+                currentre = self.current.replace(self.current[-self.count-1:], "+" + self.current[-self.count:])
             elif float(temp) > 0:
-                currentre = current.replace(current[-current.index(i):],
-                                            str(-float(current[-current.index(i):])))
-                break
-            elif float(temp) == 0:
-                currentre = 0
+                currentre = self.current.replace(self.current[-self.count-1:], "-" + self.current[-self.count:])
+        else:
+            if float(temp) < 0:
+                currentre = self.current.replace(self.current[-self.count:], "+" + self.current[-self.count:])
+            elif float(temp) > 0:
+                currentre = self.current.replace(self.current[-self.count:], "-" + self.current[-self.count:])
             else:
-                messagebox.showinfo("Error", "기능을 수행할 수 없습니다.")
-    entry.delete(0, END)
-    entry.insert(0, currentre)
+                currentre = 0
+        entry.delete(0, END)
+        entry.insert(0, currentre)
 
+#"-3+4"             Function.current
+#["-3", "+", "4"]   Formula
 
+    def equal(self):
+        Function.current = entry.get()
+        formula = []
+        temp = ""
+        i = 0
+
+        if Function.current[0] == "-":
+            formula.extend(["0", "-"])
+            i = 1
+        elif Function.current[0] == "+":
+            formula.extend(["0", "+"])
+            i = 1
+        else:
+            while True:
+                if Function.current[i].isdigit() or Function.current[i] == ".":
+                    temp += Function.current[i]
+                    i += 1
+                elif not Function.current[i].isdigit():
+                    formula.append(temp)
+                    formula.append(Function.current[i])
+                    temp = ''
+                    i += 1
+                if i == len(Function.current) - 1:
+                    temp += Function.current[i]
+                    formula.append(temp)
+                    break
+        try:
+            i = 0
+            while len(formula) > 1:
+                if '*' in formula or '/' in formula:  # 곱셈, 나눗셈 우선 계산
+                    if formula[i] == '*':  # i 번째 입력값이 곱셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
+                        calc(formula, '*', i)
+                        i = 0
+                    elif formula[i] == '/':  # i 번째 입력값이 나눗셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
+                        calc(formula, '/', i)
+                        i = 0
+                    else:
+                        i += 1  # i 번째 입력값이 숫자일 경우 i 값에 1을 더해 다음 입력값 검사
+                else:  # 덧셈, 뺄셈 계산
+                    if formula[i] == '+':  # i 번째 입력값이 덧셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
+                        calc(formula, '+', i)
+                        i = 0
+                    elif formula[i] == '-':  # i 번째 입력값이 뺄셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
+                        calc(formula, '-', i)
+                        i = 0
+                    else:
+                        i += 1  # i 번째 입력값이 숫자일 경우 i 값에 1을 더해 다음 입력값 검사
+            entry.delete(0, END)
+            entry.insert(0, formula[0])
+        except IndexError as e:
+            print(e)
 
 
 
@@ -80,19 +134,6 @@ def switch_sign():
 #3+3*-2
 #3-2 = 3+ -2    1.빼기 뒤에 다른 부호가 오면 '-'와 숫자를 하나로 묶음
 #+3+4           2.더하기가 식 맨 앞에 있거나 다른 부호 앞에 오면 생략한다.
-
-def equal():
-    term = entry.get()
-    formula = []
-    temp = ''
-    i = 0
-    while True:
-        if term[i].isdigit():
-            temp += term[i]
-
-
-
-
 
 '''
 def equal():
@@ -157,14 +198,16 @@ def equal():
 '''
 #숫자 버튼 설정
 bnum = []
+func = Function()
+
 for number in range(10):
     button1 = Button(down_frame, text=str(number), font=("Courier",18), padx = 15, pady = 10,
-                     command = lambda number=number: b_click(number))
+                     command = lambda number=number: func.b_click(number))
     bnum.append(button1)
 bnum.append(Button(down_frame, text="00", font=("Courier",18), padx = 9, pady = 10,
-                   command = lambda: b_click('00')))
+                   command = lambda: func.b_click('00')))
 bnum.append(Button(down_frame, text=".", font=("Courier",18), padx = 15, pady = 10,
-                   command = lambda: b_click('.')))
+                   command = lambda: func.b_click('.')))
 
 countnum = 1
 for row in range(3):
@@ -180,17 +223,17 @@ bnum[11].grid(row = 3, column = 2, padx = 5, pady = 5)
 bsign = []
 for sign in ["*","/","+","-"]:
     button2 = Button(down_frame, text= sign, font=("Courier",18), padx = 15, pady = 10,
-                     command = lambda sign=sign: b_click(sign))
+                     command = lambda sign=sign: func.b_click(sign))
     bsign.append(button2)
 
 bsign.append(Button(down_frame, text= "=", font=("Courier",18), padx = 15, pady = 10,
-                    command = lambda: equal()))
+                    command = lambda: func.equal()))
 bsign.append(Button(down_frame, text= "C", font=("Courier",18), padx = 15, pady = 10,
-                    command = lambda: b_clear()))
+                    command = lambda: func.b_clear()))
 bsign.append(Button(down_frame, text= "AC", font=("Courier",18), padx = 8, pady = 10,
-                    command = lambda: b_allclear()))
+                    command = lambda: func.b_allclear()))
 bsign.append(Button(down_frame, text= "+/-", font=("Courier",18), padx = 2, pady = 10,
-                    command = lambda: switch_sign()))
+                    command = lambda: func.switch_sign()))
 
 countsign = 0
 for row in range(5):
