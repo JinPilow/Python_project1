@@ -95,20 +95,22 @@ def calc(s):
             inputs.insert(0, "숫자로 시작해 주세요!")
             return
 
+        # 곱하기, 나누기 계산
         count = 0  # 인덱스 변수
         while count < len(sign):
-            if sign[count] == '*' or sign[count] == '/':  # 곱하기, 나누기 계산
+            if sign[count] == '*' or sign[count] == '/':
                 number[count] = calculat(sign[count], Decimal(number[count]), Decimal(number[count + 1]))
                 del number[count + 1]
                 del sign[count]
             else:
-                count += 1  # 연산을 안햇을시 다음 인덱스, 안햇을시 인덱스 유지(계산된건 삭제되기 때문)
+                count += 1  # 연산을 안햇을시 인덱스 유지(계산된건 삭제되기 때문)
 
+        # 더하기, 빼기 계산
         count = 0
         while count < len(sign):
             print(number)
             print(sign)
-            if sign[count] == '+' or sign[count] == '-':  # 더하기, 빼기 계산
+            if sign[count] == '+' or sign[count] == '-':
                 number[count] = calculat(sign[count], Decimal(number[count]), Decimal(number[count + 1]))
                 del number[count + 1]
                 del sign[count]
