@@ -1,7 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
 from lib.Math import *
-from decimal import Decimal
 
 root = Tk()
 
@@ -25,19 +24,21 @@ class Function:
     def __init__(self):
         self.count = 0
         Function.current = entry.get()
+        self.result = False
 
     def b_click(self, n):
+        if self.result and str(n).isdigit():
+            entry.delete(0, END)
         Function.current = entry.get()
-        entry.delete(0,END)
+        entry.delete(0, END)
         entry.insert(0, str(Function.current) + str(n))
-
-        if not str(n).isdigit():
-            self.count = 0
+        self.result = False
+        if str(n).isdigit() or str(n) == ".":
+            self.count += 1
         elif str(n) == "00":
             self.count += 2
         else:
-            self.count += 1
-            print(self.count)
+            self.count = 0
 
     def b_clear(self):
         Function.current = entry.get()
@@ -73,9 +74,6 @@ class Function:
         entry.delete(0, END)
         entry.insert(0, currentre)
 
-#"-3+4"             Function.current
-#["-3", "+", "4"]   Formula
-
     def equal(self):
         Function.current = entry.get()
         formula = []
@@ -88,20 +86,35 @@ class Function:
         elif Function.current[0] == "+":
             formula.extend(["0", "+"])
             i = 1
-        else:
-            while True:
-                if Function.current[i].isdigit() or Function.current[i] == ".":
-                    temp += Function.current[i]
+        elif Function.current[0] == ".":
+            term = "."
+        elif not Function.current[0].isdigit():
+            messagebox.showinfo("Error", "연산을 수행할 수 없습니다.")
+        while True:
+            if Function.current[i].isdigit() or Function.current[i] == ".":
+                temp += Function.current[i]
+                i += 1
+            elif not Function.current[i].isdigit():
+                if Function.current[i + 1] in ["+", "-"]:
+                    formula.append(temp)
+                    formula.append(Function.current[i])
+                    temp = ''
+                    temp += Function.current[i + 1]
+                    i += 2
+                elif Function.current[i + 1] in ["*", "/"]:
                     i += 1
-                elif not Function.current[i].isdigit():
+                    messagebox.showinfo("Error", "잘못된 연산자입니다.")
+                    entry.delete(0, END)
+                else:
                     formula.append(temp)
                     formula.append(Function.current[i])
                     temp = ''
                     i += 1
-                if i == len(Function.current) - 1:
-                    temp += Function.current[i]
-                    formula.append(temp)
-                    break
+            if i == len(Function.current) - 1:
+                temp += Function.current[i]
+                formula.append(temp)
+                break
+            self.result = True
         try:
             i = 0
             while len(formula) > 1:
@@ -126,76 +139,8 @@ class Function:
             entry.delete(0, END)
             entry.insert(0, formula[0])
         except IndexError as e:
-            print(e)
+             print(e)
 
-
-
-#-3*-2
-#3+3*-2
-#3-2 = 3+ -2    1.빼기 뒤에 다른 부호가 오면 '-'와 숫자를 하나로 묶음
-#+3+4           2.더하기가 식 맨 앞에 있거나 다른 부호 앞에 오면 생략한다.
-
-'''
-def equal():
-    term = entry.get()
-    formula = []
-    temp = ''
-    i = 0
-    if term[0] == "-":
-        temp += "-"
-        term = term[1:]
-    elif term[0] == "+":
-        term = term[1:]
-    if not term[0].isdigit() or not term[-1].isdigit:
-        messagebox.showinfo("Error", "시작문자는 숫자로 입력해주세요.")
-    else:
-        while True:
-            if term[i].isdigit() or term[i] == ".":
-                temp += term[i]
-                i += 1
-            elif not term[i].isdigit():
-                formula.append(temp)
-                formula.append(term[i])
-                temp = ''
-                i += 1
-            if i == len(term)-1:
-                temp += term[i]
-                formula.append(temp)
-                break
-        print(formula)
-        for num in range(len(formula)):
-            if num == 0:
-                pass
-            elif formula[num].isdecimal() == formula[num-1].isdecimal():
-                messagebox.showinfo("Error", "연산할 수 없습니다.")
-                entry.delete(0, END)
-                break
-    try:
-        i = 0
-        while len(formula) > 1:
-            if '*' in formula or '/' in formula:  # 곱셈, 나눗셈 우선 계산
-                if formula[i] == '*':  # i 번째 입력값이 곱셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
-                    calc(formula, '*', i)
-                    i = 0
-                elif formula[i] == '/':  # i 번째 입력값이 나눗셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
-                    calc(formula, '/', i)
-                    i = 0
-                else:
-                    i += 1  # i 번째 입력값이 숫자일 경우 i 값에 1을 더해 다음 입력값 검사
-            else:  # 덧셈, 뺄셈 계산
-                if formula[i] == '+':  # i 번째 입력값이 덧셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
-                    calc(formula, '+', i)
-                    i = 0
-                elif formula[i] == '-':  # i 번째 입력값이 뺄셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
-                    calc(formula, '-', i)
-                    i = 0
-                else:
-                    i += 1  # i 번째 입력값이 숫자일 경우 i 값에 1을 더해 다음 입력값 검사
-        entry.delete(0, END)
-        entry.insert(0, formula[0])
-    except IndexError as e:
-        print(e)
-'''
 #숫자 버튼 설정
 bnum = []
 func = Function()
@@ -246,49 +191,3 @@ bsign[6].grid(row = 4, column = 1, padx = 5, pady = 5)
 bsign[7].grid(row = 4, column = 0, padx = 5, pady = 5)
 
 root.mainloop()
-
-'''
-formula = []
-
-while True:
-    term = input("계산식을 입력하시오")        #값을 입력받아 term에 임시 저장
-    if term == "=":                         #term에 '='이 입력되면 입력 종료
-        break
-    formula.append(term)                    #입력된 값을 formula 리스트에 저장
-    if not formula[0].isnumeric():          #예외처리1) 첫 입력값 숫자가 아닐 경우 종료
-        print("잘못된 식입니다.")
-        quit()
-    for num in range(1, len(formula)):      #예외처리2) 연속되는 입력값의 자료형이 같은 경우 종료
-        if formula[num].isdecimal() == formula[num-1].isdecimal():
-            print("잘못된 식입니다.")
-            quit()
-    for number in formula[1::2]:            #예외처리3) 지정되지 않은 부호 입력시 종료
-        if number not in ["*", "/", "+", "-"]:
-            print("잘못된 식입니다.")
-            quit()
-
-
-from lib.Math import *
-
-i = 0
-while len(formula) > 1:
-    if '*' in formula or '/' in formula:    #곱셈, 나눗셈 우선 계산
-        if formula[i] == '*':               #i 번째 입력값이 곱셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
-            calc(formula, '*', i)
-            i = 0
-        elif formula[i] == '/':             #i 번째 입력값이 나눗셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
-            calc(formula, '/', i)
-            i = 0
-        else:
-            i += 1                          #i 번째 입력값이 숫자일 경우 i 값에 1을 더해 다음 입력값 검사
-    else:                                   #덧셈, 뺄셈 계산
-        if formula[i] == '+':               #i 번째 입력값이 덧셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
-            calc(formula, '+', i)
-            i = 0
-        elif formula[i] == '-':             #i 번째 입력값이 뺄셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
-            calc(formula, '-', i)
-            i = 0
-        else:
-            i += 1                          #i 번째 입력값이 숫자일 경우 i 값에 1을 더해 다음 입력값 검사
-print("Result: {}".format(formula))
-'''

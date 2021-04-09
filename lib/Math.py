@@ -24,5 +24,3 @@ def calc(formula, sign, i):
     del formula[i + 1]
     del formula[i - 1]
     return formula
-
-a = "python"
