@@ -1,4 +1,4 @@
-from lib.Math import *
+from lib.J_Math import *
 
 print("1 : 한번에 입력\n2 : 하나씩 입력\n")
 while 1:

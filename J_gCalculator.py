@@ -1,5 +1,5 @@
 from tkinter import *
-from lib.Math import *
+from lib.J_Math import *
 from decimal import *
 
 calculator = Tk()
