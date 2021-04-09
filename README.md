@@ -7,4 +7,4 @@
 
 
 
-##![Calculator-2021-04-09-12-20-52](https://user-images.githubusercontent.com/80875572/114124091-96a6ef00-992e-11eb-83e2-6459d44a3c02.gif)
+![Calculator-2021-04-09-12-20-52](https://user-images.githubusercontent.com/80875572/114124091-96a6ef00-992e-11eb-83e2-6459d44a3c02.gif)
