@@ -18,8 +18,6 @@ entry = Entry(upper_frame, width=20, font=("Courier",18), borderwidth=5)
 entry.pack()
 entry.insert(0,"")
 
-
-
 class Function:
     def __init__(self):
         self.count = 0
@@ -48,7 +46,6 @@ class Function:
         entry.delete(0, END)
         entry.insert(0, Function.current)
         self.count = 0
-
 
     def b_allclear(self):
         entry.delete(0,END)
