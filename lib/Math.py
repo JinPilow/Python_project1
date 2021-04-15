@@ -24,3 +24,10 @@ def calc(formula, sign, i):
     del formula[i + 1]
     del formula[i - 1]
     return formula
+
+def is_digit(str):
+    try:
+        tmp = float(str)
+        return True
+    except ValueError:
+        return False

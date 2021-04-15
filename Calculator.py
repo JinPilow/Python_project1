@@ -27,10 +27,10 @@ class Function:
     def b_click(self, n):
         if self.result and str(n).isdigit():
             entry.delete(0, END)
+            self.count = 0
         Function.current = entry.get()
         entry.delete(0, END)
         entry.insert(0, str(Function.current) + str(n))
-        self.count = len(str(n)) + 1
         self.result = False
         if str(n) == "00":
             self.count += 2
@@ -54,6 +54,7 @@ class Function:
     def b_allclear(self):
         entry.delete(0,END)
         self.count = 0
+        self.result = False
 
     def switch_sign(self):
         Function.current = entry.get()
@@ -92,7 +93,7 @@ class Function:
         elif not Function.current[0].isdigit(): #계산식 첫 글자가 그 외의 문자일 때 에러 메세지 출력
             messagebox.showinfo("Error", "연산을 수행할 수 없습니다.")
         while True:
-            if Function.current[i].isdigit() or Function.current[i] == ".": #첫번째 이외 글자가 숫자이거나 소수점일 때 모든 문자를 문자열에 저장
+            if is_digit(Function.current[i]): #첫번째 이외 글자가 숫자이거나 소수점일 때 모든 문자를 문자열에 저장
                 temp += Function.current[i]
                 i += 1
             elif not Function.current[i].isdigit():         #첫번째 이외 글자가 부호일 때 문자열에 저장된 숫자들을 배열에 추가하고 부호도 배열에 추가
@@ -114,8 +115,14 @@ class Function:
             if i == len(Function.current) - 1:              #마지막 숫자를 배열에 입력
                 temp += Function.current[i]
                 formula.append(temp)
+                print(formula)
                 break
             self.result = True
+        for i in range(len(formula)):
+            if i%2 == 0:
+                if not is_digit(formula[i]):
+                    messagebox.showinfo("Error", "잘못된 연산자입니다.")
+                    entry.delete(0, END)
         try:
             i = 0
             while len(formula) > 1:
