@@ -59,7 +59,6 @@ class Interface():
         bsign[6].grid(row=4, column=1, padx=5, pady=5)
         bsign[7].grid(row=4, column=0, padx=5, pady=5)
 
-
 class Function(Interface):
     def __init__(self):
         self.layout()
@@ -68,13 +67,33 @@ class Function(Interface):
 
     # 클릭 함수 생성
     def click(self, n):
-        if self.result and str(n).isdigit():
+        if self.result and str(n).isdigit():  # 첫 입력 또는 "=" 입력 후 다음 계산식 입력할 때 entry의 값을 지우고 해당 숫자 입력
             self.entry.delete(0, END)
             self.count = 0
         current = self.entry.get()
-        self.entry.delete(0, END)
-        self.entry.insert(0, str(current) + str(n))
-        self.result = False
+        if self.result and str(n) == ".":
+            if current == "0":  # 첫 입력 또는 "=" 입력 후 "." 입력할 때 entry에 "0." 출력
+                self.entry.delete(0, END)
+                self.entry.insert(0, "0")
+                self.result = False
+            else:
+                self.entry.delete(0, END)
+                self.entry.insert(0, str(current) + str(n))
+                self.result = False
+        elif self.result and current == "0":  # 첫 입력 또는 "=" 입력 후 부호 입력할 때 entry에서 초기값 0을 지우고 부호만 출력
+            self.entry.delete(0, END)
+            self.entry.insert(0, str(n))
+            self.result = False
+        elif self.result and str(n) in ["00", "0"]:  # 첫 입력 또는 "=" 입력 후 "00" 또는 "0" 입력할 때 entry에 0만 출력
+            self.count = 0
+            self.entry.insert(0, "0")
+            self.result = True
+        else:
+            self.entry.delete(0, END)
+            self.entry.insert(0, str(current) + str(n))
+            self.result = False
+        if self.entry.get() == "0.":
+            self.count = 1
         if str(n) == "00":
             self.count += 2
             print(self.count)
@@ -88,19 +107,19 @@ class Function(Interface):
     # 클리어 함수 생성
     def clear(self):
         current = self.entry.get()
-        # temp = list(current)
-        # del temp[-1]
-        # current = ''.join(temp)
         current = current[:-1]
         self.entry.delete(0, END)
         self.entry.insert(0, current)
         self.count -= 1
+        if len(current) == 0:
+            self.entry.insert(0, "0")
+            self.count = 0
 
     # 올클리어 함수 생성
-    def allclear(self):
-        self.entry.delete(0,END)
-        self.count = 0
-        self.result = False
+    def all_clear(self):
+        self.entry.delete(0, END)
+        self.entry.insert(0, "0")
+        self.result = True
 
     # 부호 변환 함수 생성
     def switch_sign(self):
@@ -130,28 +149,28 @@ class Function(Interface):
         temp = ""
         i = 0
 
-        if current[0] == "-":          #계산식 첫 글자가 "-"일 때 배열에 "0", "-"를 추가하여 음수로 연산
+        if current[0] == "-":          # 계산식 첫 글자가 "-"일 때 배열에 "0", "-"를 추가하여 음수로 연산
             formula.extend(["0", "-"])
             i = 1
-        elif current[0] == "+":        #계산식 첫 글자가 "+"일 때 배열에 "0", "+"를 추가하여 양수로 연산
+        elif current[0] == "+":        # 계산식 첫 글자가 "+"일 때 배열에 "0", "+"를 추가하여 양수로 연산
             formula.extend(["0", "+"])
             i = 1
-        elif current[0] == ".":        #계산식 첫 글자가 "."일 때 pass
+        elif current[0] == ".":        # 계산식 첫 글자가 "."일 때 pass
             pass
-        elif not current[0].isdigit(): #계산식 첫 글자가 그 외의 문자일 때 에러 메세지 출력
+        elif not current[0].isdigit(): # 계산식 첫 글자가 그 외의 문자일 때 에러 메세지 출력
             messagebox.showinfo("Error", "연산을 수행할 수 없습니다.")
         while True:
-            if is_digit(current[i]): #첫번째 이외 글자가 숫자이거나 소수점일 때 모든 문자를 문자열에 저장
+            if is_digit(current[i]): # 첫번째 이외 글자가 숫자이거나 소수점일 때 모든 문자를 문자열에 저장
                 temp += current[i]
                 i += 1
-            elif not current[i].isdigit():         #첫번째 이외 글자가 부호일 때 문자열에 저장된 숫자들을 배열에 추가하고 부호도 배열에 추가
-                if current[i + 1] in ["+", "-"]:   #부호 두 개 연달아 입력시 나중에 입력된 부호가 "+" 또는 "-"일 경우 문자열에 숫자와 함께 저장
+            elif not current[i].isdigit():         # 첫번째 이외 글자가 부호일 때 문자열에 저장된 숫자들을 배열에 추가하고 부호도 배열에 추가
+                if current[i + 1] in ["+", "-"]:   # 부호 두 개 연달아 입력시 나중에 입력된 부호가 "+" 또는 "-"일 경우 문자열에 숫자와 함께 저장
                     formula.append(temp)
                     formula.append(current[i])
                     temp = ''
                     temp += current[i + 1]
                     i += 2
-                elif current[i + 1] in ["*", "/"]: #부호 두 개 연달아 입력시 나중에 입력된 부호가 "*" 또는 "/"일 경우 오류 메세지 출력
+                elif current[i + 1] in ["*", "/"]: # 부호 두 개 연달아 입력시 나중에 입력된 부호가 "*" 또는 "/"일 경우 오류 메세지 출력
                     i += 1
                     messagebox.showinfo("Error", "잘못된 연산자입니다.")
                     self.entry.delete(0, END)
@@ -160,7 +179,7 @@ class Function(Interface):
                     formula.append(current[i])
                     temp = ''
                     i += 1
-            if i == len(current) - 1:              #마지막 숫자를 배열에 입력
+            if i == len(current) - 1:              # 마지막 숫자를 배열에 입력
                 temp += current[i]
                 formula.append(temp)
                 print(formula)
