@@ -74,7 +74,7 @@ class Function(Interface):
         if self.result and str(n) == ".":
             if current == "0":  # 첫 입력 또는 "=" 입력 후 "." 입력할 때 entry에 "0." 출력
                 self.entry.delete(0, END)
-                self.entry.insert(0, "0")
+                self.entry.insert(0, "0.")
                 self.result = False
             else:
                 self.entry.delete(0, END)
@@ -96,13 +96,10 @@ class Function(Interface):
             self.count = 1
         if str(n) == "00":
             self.count += 2
-            print(self.count)
         elif str(n).isdigit() or str(n) == ".":
             self.count += 1
-            print(self.count)
         else:
             self.count = 0
-            print(self.count)
 
     # 클리어 함수 생성
     def clear(self):
@@ -130,14 +127,14 @@ class Function(Interface):
                 messagebox.showinfo("Error", "기능을 수행할 수 없습니다.")
             if temp[0] in ["+", "-"]:
                 if float(temp) < 0:
-                    current = current.replace(current[-self.count - 1:], "+" + current[-self.count:])
+                    current = current[:-self.count - 1] + "+" + current[-self.count:]
                 elif float(temp) > 0:
-                    current = current.replace(current[-self.count - 1:], "-" + current[-self.count:])
+                    current = current[:-self.count - 1] + "-" + current[-self.count:]
             else:
                 if float(temp[1:]) < 0:
-                    current = current.replace(current[-self.count:], "+" + current[-self.count:])
+                    current = current[:-self.count:] + "+" + current[-self.count:]
                 elif float(temp[1:]) > 0:
-                    current = current.replace(current[-self.count:], "-" + current[-self.count:])
+                    current = current[:-self.count:] + "-" + current[-self.count:]
                 else:
                     current = 0
         else:
@@ -147,6 +144,7 @@ class Function(Interface):
                 current = current.replace(current[-self.count:], "-" + current[-self.count:])
             else:
                 current = 0
+
         self.entry.delete(0, END)
         self.entry.insert(0, current)
 
@@ -163,71 +161,80 @@ class Function(Interface):
             else:
                 messagebox.showinfo("Error", "연산을 수행할 수 없습니다.")
         else:
-            if current[0] == "-":          # 계산식 첫 글자가 "-"일 때 배열에 "0", "-"를 추가하여 음수로 연산
+            if current[0] == "-":                       # 계산식 첫 글자가 "-"일 때 배열에 "0", "-"를 추가하여 음수로 연산
                 formula.extend(["0", "-"])
                 i = 1
-            elif current[0] == "+":        # 계산식 첫 글자가 "+"일 때 배열에 "0", "+"를 추가하여 양수로 연산
+            elif current[0] == "+":                     # 계산식 첫 글자가 "+"일 때 배열에 "0", "+"를 추가하여 양수로 연산
                 formula.extend(["0", "+"])
                 i = 1
-            elif not current[0].isdigit(): # 계산식 첫 글자가 그 외의 문자일 때 에러 메세지 출력
+            elif not current[0].isdigit():              # 계산식 첫 글자가 그 외의 문자일 때 에러 메세지 출력
                 messagebox.showinfo("Error", "연산을 수행할 수 없습니다.")
 
             while True:
-                if is_digit(current[i]): # 첫번째 이외 글자가 숫자이거나 소수점일 때 모든 문자를 문자열에 저장
+                if is_digit(current[i]):                # 첫번째 이외 글자가 숫자이거나 소수점일 때 문자열에 저장
                     temp += current[i]
                     i += 1
-                elif not current[i].isdigit():         # 첫번째 이외 글자가 부호일 때 문자열에 저장된 숫자들을 배열에 추가하고 부호도 배열에 추가
-                    if current[i + 1] in ["+", "-"]:   # 부호 두 개 연달아 입력시 나중에 입력된 부호가 "+" 또는 "-"일 경우 문자열에 숫자와 함께 저장
+                elif not current[i].isdigit():          # 첫번째 이외 글자가 부호일 때 문자열에 저장된 숫자들을 배열에 추가하고 부호도 배열에 추가
+                    if current[i + 1] in ["+", "-"]:    # 부호 두 개 연달아 입력시 나중에 입력된 부호가 "+" 또는 "-"일 경우 문자열에 숫자와 함께 저장
                         formula.append(temp)
                         formula.append(current[i])
                         temp = ''
                         temp += current[i + 1]
                         i += 2
-                    elif current[i + 1] in ["*", "/"]: # 부호 두 개 연달아 입력시 나중에 입력된 부호가 "*" 또는 "/"일 경우 오류 메세지 출력
+                    elif current[i + 1] in ["*", "/"]:  # 부호 두 개 연달아 입력시 나중에 입력된 부호가 "*" 또는 "/"일 경우 오류 메세지 출력
                         i += 1
                         messagebox.showinfo("Error", "잘못된 연산자입니다.")
                         self.entry.delete(0, END)
+                    elif current[i] == ".":
+                        temp += current[i]
+                        i += 1
                     else:
                         formula.append(temp)
                         formula.append(current[i])
                         temp = ''
                         i += 1
-                if i == len(current) - 1:              # 마지막 숫자를 배열에 입력
+                if i == len(current) - 1:               # 마지막 숫자를 배열에 저장
                     temp += current[i]
                     formula.append(temp)
-                    print(formula)
+                    self.result = True
                     break
-                self.result = True
-            for i in range(len(formula)):
-                if i%2 == 0:
-                    if not is_digit(formula[i]):
-                        messagebox.showinfo("Error", "잘못된 연산자입니다.")
-                        self.entry.delete(0, END)
-        try:
-            i = 0
-            while len(formula) > 1:
-                if '*' in formula or '/' in formula:# 곱셈, 나눗셈 우선 계산
-                    if formula[i] == '*':           # i 번째 입력값이 곱셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
-                        calc(formula, '*', i)
-                        i = 0
-                    elif formula[i] == '/':         # i 번째 입력값이 나눗셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
-                        calc(formula, '/', i)
-                        i = 0
-                    else:
-                        i += 1                      # i 번째 입력값이 숫자일 경우 i 값에 1을 더해 다음 입력값 검사
-                else:                               # 덧셈, 뺄셈 계산
-                    if formula[i] == '+':           # i 번째 입력값이 덧셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
-                        calc(formula, '+', i)
-                        i = 0
-                    elif formula[i] == '-':         # i 번째 입력값이 뺄셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
-                        calc(formula, '-', i)
-                        i = 0
-                    else:
-                        i += 1                      # i 번째 입력값이 숫자일 경우 i 값에 1을 더해 다음 입력값 검사
-            self.entry.delete(0, END)
+                # for component in range(len(formula)):
+                #     if component % 2 == 0:
+                #         if not is_digit(formula[component]):
+                #             messagebox.showinfo("Error", "연산을 수행할 수 없습니다.")
+                #             self.entry.delete(0, END)
+
+        i = 0
+        while len(formula) > 1:
+            if '*' in formula or '/' in formula:        # 곱셈, 나눗셈 우선 계산
+                if formula[i] == '*':                   # i 번째 입력값이 곱셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
+                    calc(formula, '*', i)
+                    i = 0
+                elif formula[i] == '/':                 # i 번째 입력값이 나눗셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
+                    calc(formula, '/', i)
+                    i = 0
+                else:
+                    i += 1                              # i 번째 입력값이 숫자일 경우 i 값에 1을 더해 다음 입력값 검사
+            else:                                       # 덧셈, 뺄셈 계산
+                if formula[i] == '+':                   # i 번째 입력값이 덧셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
+                    calc(formula, '+', i)
+                    i = 0
+                elif formula[i] == '-':                 # i 번째 입력값이 뺄셈일 경우 calc 함수를 실행하고 i 값을 초기화, 루프를 다시 실행
+                    calc(formula, '-', i)
+                    i = 0
+                else:
+                    i += 1                              # i 번째 입력값이 숫자일 경우 i 값에 1을 더해 다음 입력값 검사
+
+        self.entry.delete(0, END)
+        if "." in str(formula[0]):
+            if len(str(formula[0])) > 20:               # 결과값이 소수점일 때 최대 소수점 이하 17자리까지만 표현
+                self.entry.insert(0, round(formula[0], 17))
+                self.count = len(str(abs(round(float(self.entry.get()), 17))))
+            else:
+                self.entry.insert(0, formula[0])
+        else:
             self.entry.insert(0, formula[0])
-        except IndexError as e:
-             print(e)
+            self.count = len(str(abs(int(self.entry.get()))))
 
 # 계산기 프레임
 root = Tk()
