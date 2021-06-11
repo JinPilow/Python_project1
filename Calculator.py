@@ -124,23 +124,31 @@ class Function(Interface):
     # 부호 변환 함수 생성
     def switch_sign(self):
         current = self.entry.get()
-        temp = current[-self.count-1:]
+        temp = current[-self.count - 1:]
         if not temp[0].isdigit():
             if len(temp) == 1:
                 messagebox.showinfo("Error", "기능을 수행할 수 없습니다.")
-            elif float(temp) < 0:
-                currentre = self.current.replace(self.current[-self.count-1:], "+" + self.current[-self.count:])
-            elif float(temp) > 0:
-                currentre = self.current.replace(self.current[-self.count-1:], "-" + self.current[-self.count:])
+            if temp[0] in ["+", "-"]:
+                if float(temp) < 0:
+                    current = current.replace(current[-self.count - 1:], "+" + current[-self.count:])
+                elif float(temp) > 0:
+                    current = current.replace(current[-self.count - 1:], "-" + current[-self.count:])
+            else:
+                if float(temp[1:]) < 0:
+                    current = current.replace(current[-self.count:], "+" + current[-self.count:])
+                elif float(temp[1:]) > 0:
+                    current = current.replace(current[-self.count:], "-" + current[-self.count:])
+                else:
+                    current = 0
         else:
             if float(temp) < 0:
-                currentre = self.current.replace(self.current[-self.count:], "+" + self.current[-self.count:])
+                current = current.replace(current[-self.count:], "+" + current[-self.count:])
             elif float(temp) > 0:
-                currentre = self.current.replace(self.current[-self.count:], "-" + self.current[-self.count:])
+                current = current.replace(current[-self.count:], "-" + current[-self.count:])
             else:
-                currentre = 0
+                current = 0
         self.entry.delete(0, END)
-        self.entry.insert(0, currentre)
+        self.entry.insert(0, current)
 
     # 등호(계산) 함수 생성
     def equal(self):
@@ -149,47 +157,52 @@ class Function(Interface):
         temp = ""
         i = 0
 
-        if current[0] == "-":          # 계산식 첫 글자가 "-"일 때 배열에 "0", "-"를 추가하여 음수로 연산
-            formula.extend(["0", "-"])
-            i = 1
-        elif current[0] == "+":        # 계산식 첫 글자가 "+"일 때 배열에 "0", "+"를 추가하여 양수로 연산
-            formula.extend(["0", "+"])
-            i = 1
-        elif current[0] == ".":        # 계산식 첫 글자가 "."일 때 pass
-            pass
-        elif not current[0].isdigit(): # 계산식 첫 글자가 그 외의 문자일 때 에러 메세지 출력
-            messagebox.showinfo("Error", "연산을 수행할 수 없습니다.")
-        while True:
-            if is_digit(current[i]): # 첫번째 이외 글자가 숫자이거나 소수점일 때 모든 문자를 문자열에 저장
-                temp += current[i]
-                i += 1
-            elif not current[i].isdigit():         # 첫번째 이외 글자가 부호일 때 문자열에 저장된 숫자들을 배열에 추가하고 부호도 배열에 추가
-                if current[i + 1] in ["+", "-"]:   # 부호 두 개 연달아 입력시 나중에 입력된 부호가 "+" 또는 "-"일 경우 문자열에 숫자와 함께 저장
-                    formula.append(temp)
-                    formula.append(current[i])
-                    temp = ''
-                    temp += current[i + 1]
-                    i += 2
-                elif current[i + 1] in ["*", "/"]: # 부호 두 개 연달아 입력시 나중에 입력된 부호가 "*" 또는 "/"일 경우 오류 메세지 출력
+        if len(current) == 1:
+            if current[0].isdigit():
+                formula.append(current[0])
+            else:
+                messagebox.showinfo("Error", "연산을 수행할 수 없습니다.")
+        else:
+            if current[0] == "-":          # 계산식 첫 글자가 "-"일 때 배열에 "0", "-"를 추가하여 음수로 연산
+                formula.extend(["0", "-"])
+                i = 1
+            elif current[0] == "+":        # 계산식 첫 글자가 "+"일 때 배열에 "0", "+"를 추가하여 양수로 연산
+                formula.extend(["0", "+"])
+                i = 1
+            elif not current[0].isdigit(): # 계산식 첫 글자가 그 외의 문자일 때 에러 메세지 출력
+                messagebox.showinfo("Error", "연산을 수행할 수 없습니다.")
+
+            while True:
+                if is_digit(current[i]): # 첫번째 이외 글자가 숫자이거나 소수점일 때 모든 문자를 문자열에 저장
+                    temp += current[i]
                     i += 1
-                    messagebox.showinfo("Error", "잘못된 연산자입니다.")
-                    self.entry.delete(0, END)
-                else:
+                elif not current[i].isdigit():         # 첫번째 이외 글자가 부호일 때 문자열에 저장된 숫자들을 배열에 추가하고 부호도 배열에 추가
+                    if current[i + 1] in ["+", "-"]:   # 부호 두 개 연달아 입력시 나중에 입력된 부호가 "+" 또는 "-"일 경우 문자열에 숫자와 함께 저장
+                        formula.append(temp)
+                        formula.append(current[i])
+                        temp = ''
+                        temp += current[i + 1]
+                        i += 2
+                    elif current[i + 1] in ["*", "/"]: # 부호 두 개 연달아 입력시 나중에 입력된 부호가 "*" 또는 "/"일 경우 오류 메세지 출력
+                        i += 1
+                        messagebox.showinfo("Error", "잘못된 연산자입니다.")
+                        self.entry.delete(0, END)
+                    else:
+                        formula.append(temp)
+                        formula.append(current[i])
+                        temp = ''
+                        i += 1
+                if i == len(current) - 1:              # 마지막 숫자를 배열에 입력
+                    temp += current[i]
                     formula.append(temp)
-                    formula.append(current[i])
-                    temp = ''
-                    i += 1
-            if i == len(current) - 1:              # 마지막 숫자를 배열에 입력
-                temp += current[i]
-                formula.append(temp)
-                print(formula)
-                break
-            self.result = True
-        for i in range(len(formula)):
-            if i%2 == 0:
-                if not is_digit(formula[i]):
-                    messagebox.showinfo("Error", "잘못된 연산자입니다.")
-                    self.entry.delete(0, END)
+                    print(formula)
+                    break
+                self.result = True
+            for i in range(len(formula)):
+                if i%2 == 0:
+                    if not is_digit(formula[i]):
+                        messagebox.showinfo("Error", "잘못된 연산자입니다.")
+                        self.entry.delete(0, END)
         try:
             i = 0
             while len(formula) > 1:
