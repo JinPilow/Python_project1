@@ -124,7 +124,7 @@ class Function(Interface):
         temp = current[-self.count - 1:]
         if not temp[0].isdigit():
             if len(temp) == 1:
-                messagebox.showinfo("Error", "기능을 수행할 수 없습니다.")
+                messagebox.showerror("Error", "기능을 수행할 수 없습니다.")
             if temp[0] in ["+", "-"]:
                 if float(temp) < 0:
                     current = current[:-self.count - 1] + "+" + current[-self.count:]
@@ -159,7 +159,7 @@ class Function(Interface):
             if current[0].isdigit():
                 formula.append(current[0])
             else:
-                messagebox.showinfo("Error", "연산을 수행할 수 없습니다.")
+                messagebox.showerror("Error", "연산을 수행할 수 없습니다.")
         else:
             if current[0] == "-":                       # 계산식 첫 글자가 "-"일 때 배열에 "0", "-"를 추가하여 음수로 연산
                 formula.extend(["0", "-"])
@@ -168,7 +168,7 @@ class Function(Interface):
                 formula.extend(["0", "+"])
                 i = 1
             elif not current[0].isdigit():              # 계산식 첫 글자가 그 외의 문자일 때 에러 메세지 출력
-                messagebox.showinfo("Error", "연산을 수행할 수 없습니다.")
+                messagebox.showerror("Error", "연산을 수행할 수 없습니다.")
 
             while True:
                 if is_digit(current[i]):                # 첫번째 이외 글자가 숫자이거나 소수점일 때 문자열에 저장
@@ -183,7 +183,7 @@ class Function(Interface):
                         i += 2
                     elif current[i + 1] in ["*", "/"]:  # 부호 두 개 연달아 입력시 나중에 입력된 부호가 "*" 또는 "/"일 경우 오류 메세지 출력
                         i += 1
-                        messagebox.showinfo("Error", "잘못된 연산자입니다.")
+                        messagebox.showerror("Error", "잘못된 연산자입니다.")
                         self.entry.delete(0, END)
                     elif current[i] == ".":
                         temp += current[i]
@@ -201,7 +201,7 @@ class Function(Interface):
                 # for component in range(len(formula)):
                 #     if component % 2 == 0:
                 #         if not is_digit(formula[component]):
-                #             messagebox.showinfo("Error", "연산을 수행할 수 없습니다.")
+                #             messagebox.showerror("Error", "연산을 수행할 수 없습니다.")
                 #             self.entry.delete(0, END)
 
         i = 0
